@@ -13,7 +13,6 @@
 	$pageId = $getPost['pageId'];
  
  
- 
 		$pagina = wire('pages')->get($pageId);
  
 		$array = array(); 
@@ -24,10 +23,24 @@
 		foreach($pagina->fields as $field) {
 			if (!in_array($field->type, $avoid)) {
 				// si el campo no esta vacio
-				if( htmlentities($pagina->get($field->name)) )
-					$array[$field->name] = htmlentities($pagina->get($field->name));
+				if( htmlspecialchars($pagina->get($field->name)) )
+					if($field->type == "FieldtypePage"){
+							$buscar = htmlspecialchars($pagina->get($field->name));
+							$paginas = $pages->get($buscar); 
+
+							$array[$field->name] = $paginas->title;
+						
+				}else{
+					$array[$field->name] = htmlspecialchars($pagina->get($field->name));
+				}
 			}
 		}
 		echo json_encode($array);
  
+
+
+
+
+
+
 ?>
